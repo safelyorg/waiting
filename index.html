@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Safely — Protect every transaction</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            ink: "#111111",
+                            cream: "#F5F1E6",
+                            sky: "#8FC9F0",
+                            sun: "#F7C948",
+                            mint: "#7FD9B0",
+                            coral: "#EE6A5F",
+                        },
+                        fontFamily: {
+                            display: ['"Space Grotesk"', "sans-serif"],
+                            body: ['"Inter"', "sans-serif"],
+                            mono: ['"JetBrains Mono"', "monospace"],
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            :root {
+                --ink: #111111;
+            }
+            * {
+                -webkit-tap-highlight-color: transparent;
+            }
+            body {
+                background: #f5f1e6;
+            }
+
+            /* Neo-brutalist primitives: thick border + hard offset shadow, no blur */
+            .brutal {
+                border: 3px solid var(--ink);
+                box-shadow: 6px 6px 0 var(--ink);
+            }
+            .brutal-sm {
+                border: 2.5px solid var(--ink);
+                box-shadow: 4px 4px 0 var(--ink);
+            }
+            .brutal-lg {
+                border: 4px solid var(--ink);
+                box-shadow: 10px 10px 0 var(--ink);
+            }
+            .press {
+                transition:
+                    transform 0.12s ease,
+                    box-shadow 0.12s ease;
+            }
+            .press:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 8px 8px 0 var(--ink);
+            }
+            .press:active {
+                transform: translate(2px, 2px);
+                box-shadow: 2px 2px 0 var(--ink);
+            }
+            .press-lg:hover {
+                transform: translate(-3px, -3px);
+                box-shadow: 13px 13px 0 var(--ink);
+            }
+            .press-lg:active {
+                transform: translate(3px, 3px);
+                box-shadow: 4px 4px 0 var(--ink);
+            }
+
+            .marquee-track {
+                animation: marquee 22s linear infinite;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .marquee-track {
+                    animation: none;
+                }
+            }
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+
+            /* focus visibility */
+            a:focus-visible,
+            button:focus-visible,
+            input:focus-visible {
+                outline: 3px solid var(--ink);
+                outline-offset: 2px;
+            }
+
+            .risk-ring {
+                transition: stroke-dashoffset 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+        </style>
+    </head>
+    <body class="font-body text-ink antialiased">
+        <!-- NAV -->
+        <header class="max-w-6xl mx-auto px-5 sm:px-8 pt-6">
+            <div
+                class="flex items-center justify-between bg-white brutal-sm rounded-2xl px-4 py-3"
+            >
+                <div class="flex items-center gap-2.5">
+                    <svg
+                        viewBox="0 0 200 200"
+                        class="w-8 h-8"
+                        aria-hidden="true"
+                    >
+                        <rect
+                            x="14"
+                            y="18"
+                            width="160"
+                            height="160"
+                            rx="36"
+                            fill="#111111"
+                        />
+                        <rect
+                            x="8"
+                            y="12"
+                            width="160"
+                            height="160"
+                            rx="36"
+                            fill="#F7C948"
+                            stroke="#111111"
+                            stroke-width="8"
+                        />
+                        <path
+                            d="M118 62 C104 48 78 46 62 58 C46 70 46 88 88 92 C130 96 130 114 112 128 C94 142 68 140 54 126"
+                            fill="none"
+                            stroke="#111111"
+                            stroke-width="14"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                    <span class="font-display font-bold text-lg tracking-tight"
+                        >Safely</span
+                    >
+                </div>
+                <a
+                    href="#waitlist"
+                    class="hidden sm:inline-block bg-sun text-ink font-mono font-bold text-sm px-4 py-2 rounded-full brutal-sm press"
+                >
+                    Join waitlist →
+                </a>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <main>
+            <section
+                class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-16 grid lg:grid-cols-2 gap-12 items-center"
+            >
+                <div>
+                    <span
+                        class="inline-block font-mono text-xs font-bold tracking-wide bg-mint text-ink px-3 py-1.5 rounded-full brutal-sm"
+                    >
+                        ● NOW BUILDING — JOIN THE WAITLIST
+                    </span>
+
+                    <h1
+                        class="font-display font-800 text-[13vw] leading-[0.95] sm:text-6xl lg:text-[3.6rem] mt-5 tracking-tight uppercase"
+                    >
+                        Protect every
+                        <span class="relative inline-block">
+                            transaction.
+                            <svg
+                                class="absolute left-0 -bottom-1.5 w-full"
+                                height="10"
+                                viewBox="0 0 200 10"
+                                preserveAspectRatio="none"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M2 7 C50 2, 150 2, 198 7"
+                                    stroke="#EE6A5F"
+                                    stroke-width="5"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                />
+                            </svg>
+                        </span>
+                    </h1>
+
+                    <p
+                        class="mt-6 text-base sm:text-lg text-ink/75 max-w-md leading-relaxed"
+                    >
+                        Safely is a browser extension that reads any online
+                        listing — eBay, Facebook Marketplace, Craigslist, and
+                        more — and flags fraud signals before you send a single
+                        payment.
+                    </p>
+
+                    <!-- EMAIL CAPTURE -->
+                    <form id="waitlist" class="mt-8 max-w-md" novalidate>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <label for="email" class="sr-only"
+                                >Email address</label
+                            >
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                required
+                                placeholder="you@email.com"
+                                class="flex-1 bg-white font-body text-sm sm:text-base px-4 py-3 rounded-full brutal-sm placeholder:text-ink/40 focus:outline-none"
+                            />
+                            <button
+                                type="submit"
+                                class="bg-sun text-ink font-mono font-bold text-sm px-6 py-3 rounded-full brutal-sm press whitespace-nowrap"
+                            >
+                                Join waitlist →
+                            </button>
+                        </div>
+                        <p
+                            id="form-note"
+                            class="mt-3 text-xs font-mono text-ink/60"
+                        >
+                            No spam. One email, the day we launch.
+                        </p>
+                    </form>
+                </div>
+
+                <!-- SIGNATURE ELEMENT: mock extension popup with live risk score -->
+                <div class="relative flex justify-center lg:justify-end">
+                    <div
+                        class="absolute -top-6 -right-4 w-28 h-28 bg-mint rounded-full brutal-sm -z-10 hidden sm:block"
+                        aria-hidden="true"
+                    ></div>
+                    <div
+                        class="absolute -bottom-8 -left-4 w-20 h-20 bg-coral rounded-full brutal-sm -z-10 hidden sm:block"
+                        aria-hidden="true"
+                    ></div>
+
+                    <div
+                        class="w-full max-w-sm bg-white rounded-2xl brutal-lg overflow-hidden"
+                    >
+                        <!-- fake window chrome -->
+                        <div
+                            class="flex items-center gap-1.5 px-4 py-2.5 border-b-[3px] border-ink bg-cream"
+                        >
+                            <span
+                                class="w-2.5 h-2.5 rounded-full bg-coral border border-ink"
+                            ></span>
+                            <span
+                                class="w-2.5 h-2.5 rounded-full bg-sun border border-ink"
+                            ></span>
+                            <span
+                                class="w-2.5 h-2.5 rounded-full bg-mint border border-ink"
+                            ></span>
+                            <span class="ml-3 font-mono text-[11px] text-ink/50"
+                                >safely-extension</span
+                            >
+                        </div>
+
+                        <div class="p-5">
+                            <p
+                                class="font-mono text-[11px] font-bold text-ink/50 uppercase tracking-wide"
+                            >
+                                Listing scanned
+                            </p>
+                            <p class="font-display font-bold text-lg mt-0.5">
+                                iPhone 13 Pro — Like new
+                            </p>
+
+                            <div class="mt-5 flex items-center gap-5">
+                                <div class="relative w-24 h-24 shrink-0">
+                                    <svg
+                                        viewBox="0 0 100 100"
+                                        class="w-24 h-24 -rotate-90"
+                                    >
+                                        <circle
+                                            cx="50"
+                                            cy="50"
+                                            r="42"
+                                            fill="none"
+                                            stroke="#11111120"
+                                            stroke-width="10"
+                                        />
+                                        <circle
+                                            id="risk-circle"
+                                            class="risk-ring"
+                                            cx="50"
+                                            cy="50"
+                                            r="42"
+                                            fill="none"
+                                            stroke="#EE6A5F"
+                                            stroke-width="10"
+                                            stroke-linecap="round"
+                                            stroke-dasharray="264"
+                                            stroke-dashoffset="264"
+                                        />
+                                    </svg>
+                                    <div
+                                        class="absolute inset-0 flex flex-col items-center justify-center"
+                                    >
+                                        <span
+                                            id="risk-number"
+                                            class="font-display font-800 text-2xl"
+                                            >0</span
+                                        >
+                                        <span
+                                            class="font-mono text-[9px] text-ink/50 -mt-1"
+                                            >/ 100</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <span
+                                        class="inline-block font-mono text-xs font-bold bg-coral/90 text-white px-2.5 py-1 rounded-full brutal-sm"
+                                    >
+                                        High risk
+                                    </span>
+                                    <ul
+                                        class="mt-3 space-y-1.5 font-mono text-[11px] text-ink/70"
+                                    >
+                                        <li>· Seller joined 4 days ago</li>
+                                        <li>· Price 40% below market</li>
+                                        <li>· 3 community fraud reports</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MARKETPLACE MARQUEE -->
+            <section
+                class="border-y-[3px] border-ink bg-ink py-3.5 overflow-hidden"
+            >
+                <div
+                    class="flex whitespace-nowrap marquee-track font-mono text-sm text-cream font-bold tracking-wide"
+                >
+                    <span class="mx-6">EBAY</span
+                    ><span class="mx-6 text-sun">●</span>
+                    <span class="mx-6">FACEBOOK MARKETPLACE</span
+                    ><span class="mx-6 text-mint">●</span>
+                    <span class="mx-6">CRAIGSLIST</span
+                    ><span class="mx-6 text-coral">●</span>
+                    <span class="mx-6">VINTED</span
+                    ><span class="mx-6 text-sky">●</span>
+                    <span class="mx-6">GUMTREE</span
+                    ><span class="mx-6 text-sun">●</span>
+                    <span class="mx-6">OLX</span
+                    ><span class="mx-6 text-mint">●</span>
+                    <span class="mx-6">MERCARI</span
+                    ><span class="mx-6 text-coral">●</span>
+                    <span class="mx-6">ANY WEBSITE</span
+                    ><span class="mx-6 text-sky">●</span>
+                    <!-- duplicate for seamless loop -->
+                    <span class="mx-6">EBAY</span
+                    ><span class="mx-6 text-sun">●</span>
+                    <span class="mx-6">FACEBOOK MARKETPLACE</span
+                    ><span class="mx-6 text-mint">●</span>
+                    <span class="mx-6">CRAIGSLIST</span
+                    ><span class="mx-6 text-coral">●</span>
+                    <span class="mx-6">VINTED</span
+                    ><span class="mx-6 text-sky">●</span>
+                    <span class="mx-6">GUMTREE</span
+                    ><span class="mx-6 text-sun">●</span>
+                    <span class="mx-6">OLX</span
+                    ><span class="mx-6 text-mint">●</span>
+                    <span class="mx-6">MERCARI</span
+                    ><span class="mx-6 text-coral">●</span>
+                    <span class="mx-6">ANY WEBSITE</span
+                    ><span class="mx-6 text-sky">●</span>
+                </div>
+            </section>
+
+            <!-- WHAT IS SAFELY -->
+            <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16">
+                <span
+                    class="inline-block font-mono text-xs font-bold tracking-wide bg-sky text-ink px-3 py-1.5 rounded-full brutal-sm"
+                >
+                    WHAT SAFELY DOES
+                </span>
+                <h2
+                    class="font-display font-800 text-3xl sm:text-4xl mt-4 tracking-tight max-w-xl uppercase"
+                >
+                    Three steps. No manual work.
+                </h2>
+
+                <div class="grid sm:grid-cols-3 gap-5 mt-10">
+                    <div class="bg-sky rounded-2xl brutal p-6">
+                        <span
+                            class="font-mono text-xs font-bold bg-white px-2.5 py-1 rounded-full brutal-sm inline-block"
+                            >01</span
+                        >
+                        <h3 class="font-display font-bold text-xl mt-4">
+                            Reads the listing
+                        </h3>
+                        <p class="mt-2 text-sm text-ink/75 leading-relaxed">
+                            Point your browser at any listing — Safely reads
+                            seller history, pricing, and photos automatically.
+                            No copy-paste.
+                        </p>
+                    </div>
+                    <div class="bg-sun rounded-2xl brutal p-6">
+                        <span
+                            class="font-mono text-xs font-bold bg-white px-2.5 py-1 rounded-full brutal-sm inline-block"
+                            >02</span
+                        >
+                        <h3 class="font-display font-bold text-xl mt-4">
+                            Scores the risk
+                        </h3>
+                        <p class="mt-2 text-sm text-ink/75 leading-relaxed">
+                            A 0–100 score built from seller history, community
+                            reports, and price red flags — explained in plain
+                            language.
+                        </p>
+                    </div>
+                    <div class="bg-mint rounded-2xl brutal p-6">
+                        <span
+                            class="font-mono text-xs font-bold bg-white px-2.5 py-1 rounded-full brutal-sm inline-block"
+                            >03</span
+                        >
+                        <h3 class="font-display font-bold text-xl mt-4">
+                            Warns before you pay
+                        </h3>
+                        <p class="mt-2 text-sm text-ink/75 leading-relaxed">
+                            See the verdict before you send money or share
+                            personal details — not after something's already
+                            gone wrong.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BOTTOM CTA -->
+            <section class="max-w-6xl mx-auto px-5 sm:px-8 pb-20">
+                <div
+                    class="bg-ink rounded-3xl brutal-lg px-6 sm:px-12 py-14 text-center"
+                >
+                    <h2
+                        class="font-display font-800 text-cream text-3xl sm:text-4xl tracking-tight uppercase"
+                    >
+                        Be first to try it.
+                    </h2>
+                    <p class="text-cream/70 mt-3 max-w-md mx-auto">
+                        We're finishing the extension now. Leave your email and
+                        we'll notify you the day it's live.
+                    </p>
+                    <form
+                        id="waitlist-bottom"
+                        class="mt-7 max-w-md mx-auto"
+                        novalidate
+                    >
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <label for="email-bottom" class="sr-only"
+                                >Email address</label
+                            >
+                            <input
+                                id="email-bottom"
+                                name="email"
+                                type="email"
+                                required
+                                placeholder="you@email.com"
+                                class="flex-1 bg-cream font-body text-sm sm:text-base px-4 py-3 rounded-full brutal-sm placeholder:text-ink/40 focus:outline-none"
+                            />
+                            <button
+                                type="submit"
+                                class="bg-sun text-ink font-mono font-bold text-sm px-6 py-3 rounded-full brutal-sm press whitespace-nowrap"
+                            >
+                                Join waitlist →
+                            </button>
+                        </div>
+                        <p
+                            id="form-note-bottom"
+                            class="mt-3 text-xs font-mono text-cream/50"
+                        >
+                            No spam. One email, the day we launch.
+                        </p>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="max-w-6xl mx-auto px-5 sm:px-8 pb-10">
+            <div
+                class="flex flex-col sm:flex-row items-center justify-between gap-4 border-t-[3px] border-ink pt-6"
+            >
+                <div class="flex items-center gap-2">
+                    <svg
+                        viewBox="0 0 200 200"
+                        class="w-6 h-6"
+                        aria-hidden="true"
+                    >
+                        <rect
+                            x="14"
+                            y="18"
+                            width="160"
+                            height="160"
+                            rx="36"
+                            fill="#111111"
+                        />
+                        <rect
+                            x="8"
+                            y="12"
+                            width="160"
+                            height="160"
+                            rx="36"
+                            fill="#F7C948"
+                            stroke="#111111"
+                            stroke-width="8"
+                        />
+                        <path
+                            d="M118 62 C104 48 78 46 62 58 C46 70 46 88 88 92 C130 96 130 114 112 128 C94 142 68 140 54 126"
+                            fill="none"
+                            stroke="#111111"
+                            stroke-width="14"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                    <span class="font-mono text-xs text-ink/60"
+                        >© 2026 Safely. Protect every transaction.</span
+                    >
+                </div>
+                <p class="font-mono text-xs text-ink/40">
+                    Built for eBay, Facebook Marketplace &amp; every marketplace
+                    in between.
+                </p>
+            </div>
+        </footer>
+
+        <script>
+            // Animate the risk-score ring/number once on load.
+            (function animateRisk() {
+                const circle = document.getElementById("risk-circle");
+                const number = document.getElementById("risk-number");
+                const circumference = 264;
+                const target = 82; // out of 100
+                const targetOffset =
+                    circumference - (circumference * target) / 100;
+
+                requestAnimationFrame(() => {
+                    circle.style.strokeDashoffset = targetOffset;
+                });
+
+                let current = 0;
+                const step = () => {
+                    current += 2;
+                    if (current >= target) current = target;
+                    number.textContent = current;
+                    if (current < target) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            })();
+
+            // Email capture: client-side validation + success state.
+            // Replace the fetch() call below with your real endpoint (Mailchimp, ConvertKit, your own API, etc).
+            function wireWaitlistForm(formId, noteId) {
+                const form = document.getElementById(formId);
+                const note = document.getElementById(noteId);
+                if (!form) return;
+
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const input = form.querySelector('input[type="email"]');
+                    const email = input.value.trim();
+                    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+                    if (!isValid) {
+                        note.textContent = "Enter a valid email address.";
+                        note.classList.add("text-coral");
+                        input.focus();
+                        return;
+                    }
+
+                    const button = form.querySelector('button[type="submit"]');
+                    const originalLabel = button.textContent;
+                    button.disabled = true;
+                    button.textContent = "Joining…";
+
+                    try {
+                        // Example real integration:
+                        // await fetch('https://your-backend.com/api/waitlist', {
+                        //   method: 'POST',
+                        //   headers: { 'Content-Type': 'application/json' },
+                        //   body: JSON.stringify({ email }),
+                        // });
+
+                        await new Promise((res) => setTimeout(res, 600)); // simulated latency
+
+                        input.value = "";
+                        input.placeholder = "You're on the list!";
+                        note.textContent =
+                            "✓ We'll email you the day we launch.";
+                        note.classList.remove("text-coral");
+                        note.classList.add("text-mint");
+                        button.textContent = "Joined ✓";
+                    } catch (err) {
+                        note.textContent = "Something went wrong. Try again.";
+                        note.classList.add("text-coral");
+                        button.disabled = false;
+                        button.textContent = originalLabel;
+                    }
+                });
+            }
+
+            wireWaitlistForm("waitlist", "form-note");
+            wireWaitlistForm("waitlist-bottom", "form-note-bottom");
+        </script>
+    </body>
+</html>
