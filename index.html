@@ -204,14 +204,19 @@
                     </p>
 
                     <!-- EMAIL CAPTURE -->
-                    <form id="waitlist" class="mt-8 max-w-md" novalidate>
+                    <form
+                        id="waitlist"
+                        data-kit-form-id="9638009"
+                        class="mt-8 max-w-md"
+                        novalidate
+                    >
                         <div class="flex flex-col sm:flex-row gap-3">
                             <label for="email" class="sr-only"
                                 >Email address</label
                             >
                             <input
                                 id="email"
-                                name="email"
+                                name="email_address"
                                 type="email"
                                 required
                                 placeholder="you@email.com"
@@ -455,6 +460,7 @@
                     </p>
                     <form
                         id="waitlist-bottom"
+                        data-kit-form-id="9638009"
                         class="mt-7 max-w-md mx-auto"
                         novalidate
                     >
@@ -464,7 +470,7 @@
                             >
                             <input
                                 id="email-bottom"
-                                name="email"
+                                name="email_address"
                                 type="email"
                                 required
                                 placeholder="you@email.com"
@@ -560,12 +566,15 @@
                 requestAnimationFrame(step);
             })();
 
-            // Email capture: client-side validation + success state.
-            // Replace the fetch() call below with your real endpoint (Mailchimp, ConvertKit, your own API, etc).
+            // Email capture: submits directly to Kit (ConvertKit) — no backend of your own needed.
+            // Kit handles storage + the double opt-in confirmation email automatically.
             function wireWaitlistForm(formId, noteId) {
                 const form = document.getElementById(formId);
                 const note = document.getElementById(noteId);
                 if (!form) return;
+
+                const kitFormId = form.dataset.kitFormId;
+                const endpoint = `https://app.convertkit.com/forms/${kitFormId}/subscriptions`;
 
                 form.addEventListener("submit", async (e) => {
                     e.preventDefault();
@@ -575,6 +584,7 @@
 
                     if (!isValid) {
                         note.textContent = "Enter a valid email address.";
+                        note.classList.remove("text-mint");
                         note.classList.add("text-coral");
                         input.focus();
                         return;
@@ -586,24 +596,34 @@
                     button.textContent = "Joining…";
 
                     try {
-                        // Example real integration:
-                        // await fetch('https://your-backend.com/api/waitlist', {
-                        //   method: 'POST',
-                        //   headers: { 'Content-Type': 'application/json' },
-                        //   body: JSON.stringify({ email }),
-                        // });
+                        const response = await fetch(endpoint, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Accept: "application/json",
+                            },
+                            body: JSON.stringify({ email_address: email }),
+                        });
 
-                        await new Promise((res) => setTimeout(res, 600)); // simulated latency
+                        const data = await response.json().catch(() => ({}));
+
+                        if (!response.ok || data.errors) {
+                            throw new Error(
+                                (data.errors && data.errors[0]) ||
+                                    "Subscription failed",
+                            );
+                        }
 
                         input.value = "";
                         input.placeholder = "You're on the list!";
                         note.textContent =
-                            "✓ We'll email you the day we launch.";
+                            "✓ Check your inbox or spam to confirm your email.";
                         note.classList.remove("text-coral");
                         note.classList.add("text-mint");
                         button.textContent = "Joined ✓";
                     } catch (err) {
                         note.textContent = "Something went wrong. Try again.";
+                        note.classList.remove("text-mint");
                         note.classList.add("text-coral");
                         button.disabled = false;
                         button.textContent = originalLabel;
