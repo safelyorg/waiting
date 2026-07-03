@@ -629,12 +629,12 @@
                         note.textContent =
                             "✓ Check your inbox or spam to confirm your email.";
                         note.classList.remove("text-coral");
-                        note.classList.add("text-mint");
+                        note.classList.add("text-ink");
                         button.textContent = "Joined ✓";
                     } catch (err) {
                         note.textContent = "Something went wrong. Try again.";
-                        note.classList.remove("text-mint");
-                        note.classList.add("text-coral");
+                        note.classList.remove("text-coral");
+                        note.classList.add("text-mint");
                         button.disabled = false;
                         button.textContent = originalLabel;
                     }
