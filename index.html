@@ -568,13 +568,19 @@
 
             // Email capture: submits directly to Kit (ConvertKit) — no backend of your own needed.
             // Kit handles storage + the double opt-in confirmation email automatically.
+            //
+            // IMPORTANT: replace KIT_PUBLIC_API_KEY below with your real public API key from
+            // Kit → Settings → Advanced → API. This is the PUBLIC key, safe to expose in
+            // front-end code — never put your API Secret here.
+            const KIT_PUBLIC_API_KEY = "BynuFeipCCRJZA1yeN9TrQ";
+
             function wireWaitlistForm(formId, noteId) {
                 const form = document.getElementById(formId);
                 const note = document.getElementById(noteId);
                 if (!form) return;
 
                 const kitFormId = form.dataset.kitFormId;
-                const endpoint = `https://app.convertkit.com/forms/${kitFormId}/subscriptions`;
+                const endpoint = `https://api.convertkit.com/v3/forms/${kitFormId}/subscribe`;
 
                 form.addEventListener("submit", async (e) => {
                     e.preventDefault();
@@ -599,17 +605,21 @@
                         const response = await fetch(endpoint, {
                             method: "POST",
                             headers: {
-                                "Content-Type": "application/json",
-                                Accept: "application/json",
+                                "Content-Type":
+                                    "application/json; charset=utf-8",
                             },
-                            body: JSON.stringify({ email_address: email }),
+                            body: JSON.stringify({
+                                api_key: KIT_PUBLIC_API_KEY,
+                                email: email,
+                            }),
                         });
 
                         const data = await response.json().catch(() => ({}));
 
-                        if (!response.ok || data.errors) {
+                        if (!response.ok || data.error) {
                             throw new Error(
-                                (data.errors && data.errors[0]) ||
+                                data.message ||
+                                    data.error ||
                                     "Subscription failed",
                             );
                         }
