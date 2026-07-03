@@ -580,10 +580,15 @@
             // front-end code — never put your API Secret here.
             const KIT_PUBLIC_API_KEY = "BynuFeipCCRJZA1yeN9TrQ";
 
-            function wireWaitlistForm(formId, noteId) {
+            function wireWaitlistForm(formId, noteId, theme) {
                 const form = document.getElementById(formId);
                 const note = document.getElementById(noteId);
                 if (!form) return;
+
+                // 'dark' = form sits on a black background (footer CTA), so success text
+                // needs to be white instead of the default black (text-ink).
+                const successColor =
+                    theme === "dark" ? "text-white" : "text-ink";
 
                 const kitFormId = form.dataset.kitFormId;
                 const endpoint = `https://api.convertkit.com/v3/forms/${kitFormId}/subscribe`;
@@ -596,7 +601,11 @@
 
                     if (!isValid) {
                         note.textContent = "Enter a valid email address.";
-                        note.classList.remove("text-mint");
+                        note.classList.remove(
+                            "text-mint",
+                            "text-ink",
+                            "text-white",
+                        );
                         note.classList.add("text-coral");
                         input.focus();
                         return;
@@ -634,21 +643,30 @@
                         input.placeholder = "You're on the list!";
                         note.textContent =
                             "✓ Check your inbox or spam to confirm your email.";
-                        note.classList.remove("text-coral");
-                        note.classList.add("text-ink");
+                        note.classList.remove(
+                            "text-coral",
+                            "text-mint",
+                            "text-ink",
+                            "text-white",
+                        );
+                        note.classList.add(successColor);
                         button.textContent = "Joined ✓";
                     } catch (err) {
                         note.textContent = "Something went wrong. Try again.";
-                        note.classList.remove("text-coral");
-                        note.classList.add("text-mint");
+                        note.classList.remove(
+                            "text-mint",
+                            "text-ink",
+                            "text-white",
+                        );
+                        note.classList.add("text-coral");
                         button.disabled = false;
                         button.textContent = originalLabel;
                     }
                 });
             }
 
-            wireWaitlistForm("waitlist", "form-note");
-            wireWaitlistForm("waitlist-bottom", "form-note-bottom");
+            wireWaitlistForm("waitlist", "form-note", "light");
+            wireWaitlistForm("waitlist-bottom", "form-note-bottom", "dark");
         </script>
     </body>
 </html>
